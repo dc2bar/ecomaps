@@ -6,4 +6,4 @@ app.get('/', function(req, res) {
   res.send('ecomaps - your source for everything green'); // send text response
 });
 
-app.listen(process.env.PORT || 8080);
+app.listen(process.env.PORT || 4204);
