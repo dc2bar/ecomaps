@@ -107,9 +107,9 @@
             if (status == google.maps.GeocoderStatus.OK) {
               if (status != google.maps.GeocoderStatus.ZERO_RESULTS) {
                 var marker = new google.maps.Marker({
-                  position: results[0].geometry.location
+                  position: results[0].geometry.location,
                   map: map,
-                  title: name
+                  title:"Hello World!"
                 });
               }
             }
