@@ -116,6 +116,9 @@
         console.log(data);
       });
     });
+    $('#myModalSearching').on('hidden', function(){
+      $('#myModalPlot').modal({backdrop: 'static', keyboard: false, show: true});
+    })
   });
 </script>
 <style>
