@@ -12,10 +12,11 @@
 <script>
   $(function(){
     $('#myModal').modal({backdrop: 'static', keyboard: false, show: true});
+    $('#useGeolocate').click(function(){
+      $('#myModal').modal('hide');
+      google.maps.event.addDomListener(window, 'load', initialize);
+    });
   });
-  // Note: This example requires that you consent to location sharing when
-  // prompted by your browser. If you see a blank space instead of the map, this
-  // is probably because you have denied permission for location sharing.
 
   var map;
 
@@ -64,8 +65,6 @@
     var infowindow = new google.maps.InfoWindow(options);
     map.setCenter(options.position);
   }
-
-  google.maps.event.addDomListener(window, 'load', initialize);
 </script>
 <style>
   html, body, #map-canvas {
