@@ -98,16 +98,18 @@
       $('#myModalSearching').modal({backdrop: 'static', keyboard: false, show: true});
     });
     $('#btnPopulateMap').click(function(){
+      var markers = [];
       $.getJSON('/getall',function(data){
         for(var i in data){
           var location = data[i];
           var name = location.dba ? location.dba : location.name;
+          console.log(location);
           var address = location.street + " " + location.city + " " + location.state + " " + location.zip;
           var geocoder = new google.maps.Geocoder();
           geocoder.geocode({ 'address': address}, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
               if (status != google.maps.GeocoderStatus.ZERO_RESULTS) {
-                var marker = new MarkerWithLabel({
+                markers.push(new MarkerWithLabel({
                   position: results[0].geometry.location,
                   draggable: false,
                   raiseOnDrag: false,
@@ -116,10 +118,10 @@
                   labelAnchor: new google.maps.Point(22, 0),
                   labelClass: "labels", // the CSS class for the label
                   labelStyle: {opacity: 0.75}
-                });
+                }));
 
                 var iw1 = new google.maps.InfoWindow({
-                  content: "Home For Sale"
+                  content: name
                 });
                 google.maps.event.addListener(marker, "click", function (e) { iw1.open(map, this); });
               }
