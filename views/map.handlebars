@@ -62,7 +62,11 @@
     $('#myModal').modal({backdrop: 'static', keyboard: false, show: true});
     $('#useGeolocate').click(function(){
       $('#myModal').modal('hide');
+      $('#myModalSearch').modal({backdrop: 'static', keyboard: false, show: true});
       initialize();
+      google.maps.event.addListenerOnce(map, 'idle', function(){
+        $('#myModalSearch').modal('hide');
+      });
     });
   });
 </script>
@@ -92,3 +96,20 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="myModalSearching" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Geolocating...</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          OK...looking for you. Calm your tits
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
