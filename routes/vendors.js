@@ -40,13 +40,6 @@ exports.findById = function(req, res) {
 //DONT FUCKING USE THIS. SHIT WILL PULL WAYYYY TOO MUCH DATA!
 exports.findAll = function(req, res) {
   db.collection('vendors', function(err, collection) {
-    console.log('error: ');
-    console.log('collection: ');
-    collection.find().toArray(function(err, items) {
-      console.log(items);
-    });
-  });
-  db.collection('vendors', function(err, collection) {
     collection.find().toArray(function(err, items) {
       res.send(items);
     });
