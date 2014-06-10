@@ -1,13 +1,16 @@
-var express = require('express');
+var express = require('express'),
+    exphbs  = require('express3-handlebars'),
+    vendors = require('./routes/vendors');
+
 var app = express();
 
-var vendors = require('./routes/vendors');
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
+
+app.get('/', function (req, res) {
+  res.render('map');
+});
 
 app.get('/getall', vendors.findAll);
-
-app.get('/', function(req, res) {
-  res.type('text/plain'); // set content-type
-  res.send('ecomaps - your source for everything green'); // send text response
-});
 
 app.listen(process.env.PORT || 80);

@@ -3,6 +3,7 @@
   "description": "your source for all things green",
   "version": "0.0.1",
   "dependencies": {
-    "express": "~3.6.0"
+    "express": "~3.6.0",
+    "express3-handlebars": "latest"
   }
 }
