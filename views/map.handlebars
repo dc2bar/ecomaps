@@ -24,17 +24,17 @@
       geocoder.geocode({ 'address': address}, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           if (status != google.maps.GeocoderStatus.ZERO_RESULTS) {
-
             map.setCenter(results[0].geometry.location);
-
+            $('#myModalSearching').modal('hide');
           } else {
+            $('#myModalSearching').modal('hide');
             alert("No results found");
           }
         } else {
+          $('#myModalSearching').modal('hide');
           alert("Geocode was not successful for the following reason: " + status);
         }
       });
-      $('#myModalSearching').modal('hide');
     } else {
       // Try HTML5 geolocation
       if (navigator.geolocation) {
