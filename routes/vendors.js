@@ -1,20 +1,3 @@
-function download(url, cb) {
-  var data = "";
-  var request = require("http").get(url, function(res) {
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-
-    res.on('end', function() {
-      cb(data);
-    })
-  });
-
-  request.on('error', function(e) {
-    console.log("Got error: " + e.message);
-  });
-}
-
 exports.getList - function(req, res) {
   var location = req.params.location;
   var type = req.params.type;
@@ -30,21 +13,24 @@ var server = new Server('localhost', 27017, {auto_reconnect: true});
 db = new Db('licenses', server);
 
 db.open(function(err, db) {
+  console.log('connecting');
   if(!err) {
     console.log("Connected to 'licenses' database");
-    db.collection('licenses', {strict:true}, function(err, collection) {
+    db.collection('vendors', {strict:true}, function(err, collection) {
       if (err) {
         console.log("The 'licenses' collection doesn't exist. Creating it with sample data...");
         populateDB();
       }
     });
+  }else {
+    console.log(err);
   }
 });
 
 exports.findById = function(req, res) {
   var id = req.params.id;
   console.log('Retrieving license: ' + id);
-  db.collection('licenses', function(err, collection) {
+  db.collection('vendors', function(err, collection) {
     collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
       res.send(item);
     });
@@ -53,7 +39,14 @@ exports.findById = function(req, res) {
 
 //DONT FUCKING USE THIS. SHIT WILL PULL WAYYYY TOO MUCH DATA!
 exports.findAll = function(req, res) {
-  db.collection('licenses', function(err, collection) {
+  db.collection('vendors', function(err, collection) {
+    console.log('error: ');
+    console.log('collection: ');
+    collection.find().toArray(function(err, items) {
+      console.log(items);
+    });
+  });
+  db.collection('vendors', function(err, collection) {
     collection.find().toArray(function(err, items) {
       res.send(items);
     });
@@ -64,7 +57,7 @@ exports.findAll = function(req, res) {
 exports.addLicense = function(req, res) {
   var license = req.body;
   console.log('Adding license: ' + JSON.stringify(wine));
-  db.collection('licenses', function(err, collection) {
+  db.collection('vendors', function(err, collection) {
     collection.insert(license, {safe:true}, function(err, result) {
       if (err) {
         res.send({'error':'An error has occurred'});
@@ -82,7 +75,7 @@ exports.updateLicense = function(req, res) {
   var license = req.body;
   console.log('Updating license: ' + id);
   console.log(JSON.stringify(license));
-  db.collection('licenses', function(err, collection) {
+  db.collection('vendors', function(err, collection) {
     collection.update({'_id':new BSON.ObjectID(id)}, wine, {safe:true}, function(err, result) {
       if (err) {
         console.log('Error updating license: ' + err);
@@ -99,7 +92,7 @@ exports.updateLicense = function(req, res) {
 exports.deleteLicense = function(req, res) {
   var id = req.params.id;
   console.log('Deleting license: ' + id);
-  db.collection('licenses', function(err, collection) {
+  db.collection('vendors', function(err, collection) {
     collection.remove({'_id':new BSON.ObjectID(id)}, {safe:true}, function(err, result) {
       if (err) {
         res.send({'error':'An error has occurred - ' + err});
@@ -138,7 +131,7 @@ var populateDB = function() {
       gridY: "saint_cosme.jpg"
     }];
 
-  db.collection('locations', function(err, collection) {
+  db.collection('vendors', function(err, collection) {
     collection.insert(locations, {safe:true}, function(err, result) {});
   });
 
