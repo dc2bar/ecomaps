@@ -12,33 +12,50 @@
 <script>
   var map;
 
-  function initialize() {
+  function initialize(address) {
     var mapOptions = {
       zoom: 14
     };
     map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
 
-    // Try HTML5 geolocation
-    if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        var pos = new google.maps.LatLng(position.coords.latitude,
-            position.coords.longitude);
+    if (address) {
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ 'address': address}, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          if (status != google.maps.GeocoderStatus.ZERO_RESULTS) {
 
-        var infowindow = new google.maps.InfoWindow({
-          map: map,
-          position: pos,
-          content: 'This is where you are, based on HTML5 geolocation tag. This can be pretty off...if we port to full app i can tap into GPS but website can only use html5 which can kind of be off.'
-        });
+            map.setCenter(results[0].geometry.location);
 
-        map.setCenter(pos);
-        $('#myModalSearching').modal('hide');
-      }, function() {
-        handleNoGeolocation(true);
+          } else {
+            alert("No results found");
+          }
+        } else {
+          alert("Geocode was not successful for the following reason: " + status);
+        }
       });
     } else {
-      // Browser doesn't support Geolocation
-      handleNoGeolocation(false);
+      // Try HTML5 geolocation
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          var pos = new google.maps.LatLng(position.coords.latitude,
+              position.coords.longitude);
+
+          var infowindow = new google.maps.InfoWindow({
+            map: map,
+            position: pos,
+            content: 'This is where you are, based on HTML5 geolocation tag. This can be pretty off...if we port to full app i can tap into GPS but website can only use html5 which can kind of be off.'
+          });
+
+          map.setCenter(pos);
+          $('#myModalSearching').modal('hide');
+        }, function () {
+          handleNoGeolocation(true);
+        });
+      } else {
+        // Browser doesn't support Geolocation
+        handleNoGeolocation(false);
+      }
     }
   }
 
@@ -60,9 +77,9 @@
   }
 
   function manualAddress(address) {
-    var geocoder;
+
     var map;
-    geocoder = new google.maps.Geocoder();
+
     var latlng = new google.maps.LatLng(-34.397, 150.644);
     var myOptions = {
       zoom: 8,
@@ -72,38 +89,25 @@
       navigationControl: true,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-    if (geocoder) {
-      geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-          if (status != google.maps.GeocoderStatus.ZERO_RESULTS) {
-            map.setCenter(results[0].geometry.location);
+    map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
 
-          } else {
-            alert("No results found");
-          }
-        } else {
-          alert("Geocode was not successful for the following reason: " + status);
-        }
-      });
-    }
   }
 
-  $(function(){
+  $(function () {
     $('#myModal').modal({backdrop: 'static', keyboard: false, show: true});
-    $('#useGeolocate').click(function(){
+    $('#useGeolocate').click(function () {
       $('#myModal').modal('hide');
       $('#myModalSearching').modal({backdrop: 'static', keyboard: false, show: true});
       initialize();
     });
-    $('#useAddress').click(function(){
+    $('#useAddress').click(function () {
       $('#myModal').modal('hide');
       $('#myModalAddress').modal({backdrop: 'static', keyboard: false, show: true});
 
     });
-    $('#btnSearchAddress').click(function(){
+    $('#btnSearchAddress').click(function () {
       $('#myModalAddress').modal('hide');
-      manualAddress($('#searchAddress').val());
+      initialize($('#searchAddress').val());
       $('#myModalSearching').modal({backdrop: 'static', keyboard: false, show: true});
     })
   });
@@ -115,7 +119,6 @@
     margin: 0;
   }
 </style>
-
 
 
 <div id="map-canvas"></div>
@@ -134,7 +137,8 @@
   </div>
 </div>
 
-<div class="modal fade" id="myModalSearching" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModalSearching" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -144,6 +148,7 @@
         <p>
           OK...looking for you. Calm your tits
         </p>
+
         <div style="width: 100%; margin: auto;">
           <img src="http://www.iab.net/extra/adquickref/spinnerLarge.gif" style="margin: auto;"/>
         </div>
@@ -152,7 +157,8 @@
   </div>
 </div>
 
-<div class="modal fade" id="myModalAddress" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModalAddress" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -162,7 +168,7 @@
         <p>
           THERE'S NO ERROR HANDLING YET! MUST BE GOOD ADDRESS OR APP WILL SHIT ITSELF!
         </p>
-        <input type="text" class="x-large" id="searchAddress" />
+        <input type="text" class="x-large" id="searchAddress"/>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" id="btnSearchAddress">Search by address</button>
