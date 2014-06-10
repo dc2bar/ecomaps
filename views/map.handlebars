@@ -26,6 +26,7 @@
           if (status != google.maps.GeocoderStatus.ZERO_RESULTS) {
             map.setCenter(results[0].geometry.location);
             $('#myModalSearching').modal('hide');
+            $('#myModalPlot').modal({backdrop: 'static', keyboard: false, show: true});
           } else {
             $('#myModalSearching').modal('hide');
             alert("No results found");
@@ -50,6 +51,7 @@
 
           map.setCenter(pos);
           $('#myModalSearching').modal('hide');
+          $('#myModalPlot').modal({backdrop: 'static', keyboard: false, show: true});
         }, function () {
           handleNoGeolocation(true);
         });
@@ -116,9 +118,6 @@
         console.log(data);
       });
     });
-    $('#myModalSearching').on('hidden', function(){
-      $('#myModalPlot').modal({backdrop: 'static', keyboard: false, show: true});
-    })
   });
 </script>
 <style>
