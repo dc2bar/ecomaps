@@ -59,6 +59,38 @@
     map.setCenter(options.position);
   }
 
+  function manualAddress(address) {
+    var geocoder;
+    var map;
+    function initialize() {
+      geocoder = new google.maps.Geocoder();
+      var latlng = new google.maps.LatLng(-34.397, 150.644);
+      var myOptions = {
+        zoom: 8,
+        center: latlng,
+        mapTypeControl: true,
+        mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
+        navigationControl: true,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+      if (geocoder) {
+        geocoder.geocode( { 'address': address}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            if (status != google.maps.GeocoderStatus.ZERO_RESULTS) {
+              map.setCenter(results[0].geometry.location);
+
+            } else {
+              alert("No results found");
+            }
+          } else {
+            alert("Geocode was not successful for the following reason: " + status);
+          }
+        });
+      }
+    }
+  }
+
   $(function(){
     $('#myModal').modal({backdrop: 'static', keyboard: false, show: true});
     $('#useGeolocate').click(function(){
@@ -66,6 +98,16 @@
       $('#myModalSearching').modal({backdrop: 'static', keyboard: false, show: true});
       initialize();
     });
+    $('#useAddress').click(function(){
+      $('#myModal').modal('hide');
+      $('#myModalAddress').modal({backdrop: 'static', keyboard: false, show: true});
+
+    });
+    $('#btnSearchAddress').click(function(){
+      $('#myModalAddress').modal('hide');
+      manualAddress($('#searchAddress').val());
+      $('#myModalSearching').modal({backdrop: 'static', keyboard: false, show: true});
+    })
   });
 </script>
 <style>
@@ -84,7 +126,6 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">Set Starting Point (where should we center the map)</h4>
       </div>
       <div class="modal-body">
@@ -99,7 +140,6 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">Geolocating...</h4>
       </div>
       <div class="modal-body">
@@ -109,6 +149,25 @@
         <div style="width: 100%; margin: auto;">
           <img src="http://www.iab.net/extra/adquickref/spinnerLarge.gif" style="margin: auto;"/>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModalAddress" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Enter an address to set as center</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          THERE'S NO ERROR HANDLING YET! MUST BE GOOD ADDRESS OR APP WILL SHIT ITSELF!
+        </p>
+        <input type="text" class="x-large" id="searchAddress" />
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="btnSearchAddress">Search by address</button>
       </div>
     </div>
   </div>
