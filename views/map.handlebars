@@ -118,7 +118,7 @@
     geocoder.geocode({ 'address': address}, function (results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         if (status != google.maps.GeocoderStatus.ZERO_RESULTS) {
-          markers[number] = new MarkerWithLabel({
+          var marker = new MarkerWithLabel({
             position: results[0].geometry.location,
             draggable: false,
             raiseOnDrag: false,
