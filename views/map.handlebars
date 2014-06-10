@@ -34,6 +34,7 @@
           alert("Geocode was not successful for the following reason: " + status);
         }
       });
+      $('#myModalSearching').modal('hide');
     } else {
       // Try HTML5 geolocation
       if (navigator.geolocation) {
