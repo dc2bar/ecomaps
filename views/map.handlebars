@@ -62,10 +62,10 @@
     $('#myModal').modal({backdrop: 'static', keyboard: false, show: true});
     $('#useGeolocate').click(function(){
       $('#myModal').modal('hide');
-      $('#myModalSearch').modal({backdrop: 'static', keyboard: false, show: true});
+      $('#myModalSearching').modal({backdrop: 'static', keyboard: false, show: true});
       initialize();
       google.maps.event.addListenerOnce(map, 'idle', function(){
-        $('#myModalSearch').modal('hide');
+        $('#myModalSearching').modal('hide');
       });
     });
   });
