@@ -13,4 +13,8 @@ app.get('/', function (req, res) {
 
 app.get('/getall', vendors.findAll);
 
+app.get('/Property/Details/7298942/CO/80233/Thornton/5095-East-116th-Place', function(req, res) {
+  res.render('house');
+})
+
 app.listen(process.env.PORT || 80);
